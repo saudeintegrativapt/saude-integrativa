@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde Integrativa — Célia Nogueira</title>
+<meta name="description" content="Terapias integrativas com base em experiência clínica de enfermagem. Consultas individuais e workshops com Célia Nogueira.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --bg: #F8F9FA;
+    --ink: #172F2D;
+    --forest: #27524E;
+    --sage: #B4DCC4;
+    --white: #FFFFFF;
+    --max: 720px;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+
+  a{ color: inherit; text-decoration: none; }
+
+  img{ max-width: 100%; display:block; }
+
+  .wrap{
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- HEADER ---------- */
+
+  header{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(248,249,250,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(23,47,45,0.08);
+  }
+
+  .header-inner{
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand img{
+    height: 30px;
+    width: auto;
+    opacity: 0.92;
+  }
+
+  .brand span{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: 0.01em;
+    color: var(--forest);
+  }
+
+  .btn{
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    padding: 11px 22px;
+    border-radius: 999px;
+    background: var(--forest);
+    color: var(--white);
+    border: 1px solid var(--forest);
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+
+  .btn:hover{ background: var(--ink); border-color: var(--ink); }
+  .btn:active{ transform: scale(0.98); }
+  .btn:focus-visible{ outline: 3px solid var(--sage); outline-offset: 2px; }
+
+  .btn-header{
+    padding: 9px 18px;
+    font-size: 0.85rem;
+  }
+
+  .btn-ghost{
+    background: transparent;
+    color: var(--forest);
+  }
+  .btn-ghost:hover{ background: rgba(39,82,78,0.08); color: var(--forest); }
+
+  .btn-disabled{
+    background: rgba(23,47,45,0.12);
+    border-color: transparent;
+    color: rgba(23,47,45,0.45);
+    cursor: default;
+    pointer-events: none;
+  }
+
+  /* ---------- HERO ---------- */
+
+  .hero{
+    padding: 72px 0 56px;
+  }
+
+  .hero h1{
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    max-width: 15ch;
+    margin-bottom: 20px;
+  }
+
+  .hero p{
+    font-size: 1.05rem;
+    max-width: 42ch;
+    color: rgba(23,47,45,0.78);
+  }
+
+  /* ---------- SECTIONS ---------- */
+
+  section{
+    padding: 52px 0;
+    border-top: 1px solid rgba(23,47,45,0.08);
+  }
+
+  .eyebrow{
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--forest);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  section h2{
+    font-size: clamp(1.5rem, 4vw, 1.9rem);
+    margin-bottom: 18px;
+  }
+
+  section > .wrap > p.lead{
+    max-width: 48ch;
+    color: rgba(23,47,45,0.78);
+    margin-bottom: 28px;
+  }
+
+  /* ---------- CONSULTAS ---------- */
+
+  .terapias-list{
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    margin-bottom: 30px;
+  }
+
+  .terapias-list li{
+    font-size: 0.98rem;
+    padding-left: 18px;
+    position: relative;
+    color: var(--ink);
+  }
+
+  .terapias-list li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--forest);
+  }
+
+  /* ---------- WORKSHOPS ---------- */
+
+  .workshops-section{
+    background: var(--sage);
+    border-top: none;
+    border-bottom: 1px solid rgba(23,47,45,0.08);
+  }
+
+  .workshop-cards{
+    display: grid;
+    gap: 14px;
+  }
+
+  .workshop-card{
+    background: var(--white);
+    border-radius: 14px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .workshop-card .info h3{
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+
+  .workshop-card .info .data{
+    font-size: 0.9rem;
+    color: rgba(23,47,45,0.65);
+  }
+
+  .workshop-card .tag{
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--forest);
+    background: rgba(39,82,78,0.08);
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+
+  .workshop-card--destaque{
+    border: 1.5px solid var(--forest);
+  }
+
+  .tag--destaque{
+    background: var(--forest);
+    color: var(--white);
+  }
+
+  .workshops-empty{
+    background: var(--white);
+    border-radius: 14px;
+    padding: 28px 22px;
+    text-align: center;
+    color: rgba(23,47,45,0.6);
+    font-size: 0.95rem;
+    display: none;
+  }
+
+  /* ---------- SOBRE ---------- */
+
+  .sobre-grid{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .sobre-photo{
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: var(--sage);
+    flex-shrink: 0;
+  }
+
+  .sobre-grid p{
+    color: rgba(23,47,45,0.85);
+    max-width: 46ch;
+  }
+
+  /* ---------- CONTACTO / FOOTER ---------- */
+
+  footer{
+    padding: 44px 0 60px;
+    text-align: center;
+  }
+
+  footer .brand-line{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--forest);
+    margin-bottom: 6px;
+  }
+
+  footer .contact-line{
+    font-size: 0.92rem;
+    color: rgba(23,47,45,0.7);
+    margin-bottom: 18px;
+  }
+
+  footer .contact-line a{
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer-actions{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  @media (max-width: 480px){
+    .terapias-list{ grid-template-columns: 1fr; }
+    .workshop-card{ flex-direction: column; align-items: flex-start; }
+    .workshop-card .btn{ width: 100%; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    .btn{ transition: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="assets/logo.png" alt="Saúde Integrativa">
+      <span>Saúde Integrativa</span>
+    </div>
+    <a href="#consultas" class="btn btn-header" aria-label="Ir para consultas e marcar">Marcar Consulta</a>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1>Saúde Integrativa<br>Célia Nogueira</h1>
+      <p>Terapias integrativas com base em experiência clínica de enfermagem.</p>
+    </div>
+  </section>
+
+  <section id="sobre">
+    <div class="wrap">
+      <p class="eyebrow">Sobre</p>
+      <div class="sobre-grid">
+        <!-- Espaço reservado para foto da Célia — adicionar imagem em assets/celia.jpg e trocar o div abaixo por <img> -->
+        <div class="sobre-photo" aria-hidden="true"></div>
+        <p>Enfermeira há mais de 30 anos. As terapias integrativas foram uma extensão natural desse percurso clínico.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="consultas">
+    <div class="wrap">
+      <p class="eyebrow">Consultas Individuais</p>
+      <h2>Acompanhamento personalizado</h2>
+      <ul class="terapias-list">
+        <li>Microbioma e perfil alimentar</li>
+        <li>Reflexologia</li>
+        <li>Aromaterapia</li>
+        <li>Terapia termoauricular</li>
+        <li>Iridologia</li>
+        <li>Cromoterapia</li>
+      </ul>
+      <!-- TODO: apontar este botão para o sistema de agendamento assim que estiver testado -->
+      <a href="#contacto" class="btn" aria-label="Marcar consulta individual">Marcar Consulta</a>
+    </div>
+  </section>
+
+  <section id="workshops" class="workshops-section">
+    <div class="wrap">
+      <p class="eyebrow">Workshops</p>
+      <h2>Encontros em grupo</h2>
+      <p class="lead">Inscrição prévia obrigatória. As vagas e detalhes de acesso são confirmados após a inscrição.</p>
+
+      <!--
+        WORKSHOPS DINÂMICOS
+        Esta lista deve vir da tab Config_Workshops (Google Sheets) via Apps Script,
+        filtrando por "Visível no site" = SIM.
+        Estrutura de exemplo por cartão abaixo — substituir por render dinâmico (fetch/JS)
+        quando o Web App de inscrições estiver pronto.
+      -->
+      <div class="workshop-cards" id="workshop-list">
+
+        <div class="workshop-card workshop-card--destaque">
+          <div class="info">
+            <span class="tag tag--destaque">Presencial</span>
+            <h3>Workshop Saúde Integrativa</h3>
+            <p class="data">Setembro/Outubro — data a confirmar</p>
+          </div>
+          <a href="#contacto" class="btn btn-header">Inscrever</a>
+        </div>
+
+        <div class="workshop-card">
+          <div class="info">
+            <span class="tag">Online</span>
+            <h3>Aromaterapia</h3>
+            <p class="data">31 de julho</p>
+          </div>
+          <a href="#contacto" class="btn btn-header">Inscrever</a>
+        </div>
+
+        <div class="workshop-card">
+          <div class="info">
+            <span class="tag">Online</span>
+            <h3>Reflexologia</h3>
+            <p class="data">28 de agosto</p>
+          </div>
+          <a href="#contacto" class="btn btn-header">Inscrever</a>
+        </div>
+
+      </div>
+
+      <p class="workshops-empty" id="workshops-empty">De momento não há workshops abertos a inscrição. Segue-nos no Instagram para seres avisada assim que abrirem novas datas.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contacto">
+  <div class="wrap">
+    <p class="brand-line">Saúde Integrativa</p>
+    <p class="contact-line"><a href="mailto:cn.saudeintegrativa@gmail.com">cn.saudeintegrativa@gmail.com</a></p>
+    <div class="footer-actions">
+      <a href="https://www.instagram.com/saudeintegrativapt" class="btn btn-ghost" target="_blank" rel="noopener">Seguir no Instagram</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
