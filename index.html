@@ -341,6 +341,128 @@
     flex-wrap: wrap;
   }
 
+  .workshops-loading{
+    text-align: center;
+    color: rgba(23,47,45,0.6);
+    font-size: 0.92rem;
+    padding: 20px 0;
+  }
+
+  /* ---------- MODAL ---------- */
+
+  .modal-overlay{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(23,47,45,0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.active{ display: flex; }
+
+  .modal{
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px;
+    max-width: 420px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-close{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: rgba(23,47,45,0.5);
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .modal-close:hover{ color: var(--ink); }
+
+  .modal h3{
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+    padding-right: 24px;
+  }
+
+  .modal-workshop-name{
+    font-size: 0.9rem;
+    color: var(--forest);
+    margin-bottom: 20px;
+  }
+
+  #inscricao-form label{
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 14px 0 6px;
+    color: var(--ink);
+  }
+
+  #inscricao-form input[type="text"],
+  #inscricao-form input[type="email"],
+  #inscricao-form input[type="tel"]{
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(23,47,45,0.18);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--bg);
+  }
+
+  #inscricao-form input:focus-visible{
+    outline: 2px solid var(--forest);
+    outline-offset: 1px;
+  }
+
+  .checkbox-label{
+    display: flex !important;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem !important;
+    font-weight: 400 !important;
+    color: rgba(23,47,45,0.75) !important;
+    margin: 16px 0 !important;
+    cursor: pointer;
+  }
+
+  .checkbox-label input{ margin-top: 3px; }
+
+  #inscricao-form .btn{
+    width: 100%;
+    text-align: center;
+    margin-top: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  #inscricao-form .btn:disabled{
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .form-status{
+    font-size: 0.85rem;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  .form-status.success{ color: var(--forest); }
+  .form-status.error{ color: #B3423A; }
+
   /* ---------- RESPONSIVE ---------- */
 
   @media (max-width: 480px){
@@ -366,7 +488,7 @@
       <img src="assets/logo.png" alt="Saúde Integrativa">
       <span>Saúde Integrativa</span>
     </div>
-    <a href="#consultas" class="btn btn-header" aria-label="Ir para consultas e marcar">Marcar Consulta</a>
+    <a href="marcar.html" class="btn btn-header" aria-label="Ir para marcação de consulta">Marcar Consulta</a>
   </div>
 </header>
 
@@ -403,57 +525,58 @@
         <li>Cromoterapia</li>
       </ul>
       <!-- TODO: apontar este botão para o sistema de agendamento assim que estiver testado -->
-      <a href="#contacto" class="btn" aria-label="Marcar consulta individual">Marcar Consulta</a>
+      <a href="marcar.html" class="btn" aria-label="Marcar consulta individual">Marcar Consulta</a>
     </div>
   </section>
 
   <section id="workshops" class="workshops-section">
     <div class="wrap">
       <p class="eyebrow">Workshops</p>
-      <h2>Espaços de Partilha</h2>
+      <h2>Encontros em grupo</h2>
       <p class="lead">Inscrição prévia obrigatória. As vagas e detalhes de acesso são confirmados após a inscrição.</p>
 
       <!--
         WORKSHOPS DINÂMICOS
-        Esta lista deve vir da tab Config_Workshops (Google Sheets) via Apps Script,
-        filtrando por "Visível no site" = SIM.
-        Estrutura de exemplo por cartão abaixo — substituir por render dinâmico (fetch/JS)
-        quando o Web App de inscrições estiver pronto.
+        Esta lista vem da tab Config_Workshops via Apps Script (doGet),
+        filtrando por "Visível no site" = SIM. Ver script.js.
       -->
       <div class="workshop-cards" id="workshop-list">
-
-        <div class="workshop-card workshop-card--destaque">
-          <div class="info">
-            <span class="tag tag--destaque">Presencial</span>
-            <h3>Workshop Saúde Integrativa</h3>
-            <p class="data">Setembro/Outubro — data a confirmar</p>
-          </div>
-          <a href="#contacto" class="btn btn-header">Inscrever</a>
-        </div>
-
-        <div class="workshop-card">
-          <div class="info">
-            <span class="tag">Online</span>
-            <h3>Aromaterapia</h3>
-            <p class="data">31 de julho</p>
-          </div>
-          <a href="#contacto" class="btn btn-header">Inscrever</a>
-        </div>
-
-        <div class="workshop-card">
-          <div class="info">
-            <span class="tag">Online</span>
-            <h3>Reflexologia</h3>
-            <p class="data">28 de agosto</p>
-          </div>
-          <a href="#contacto" class="btn btn-header">Inscrever</a>
-        </div>
-
+        <p class="workshops-loading" id="workshops-loading">A carregar workshops…</p>
       </div>
 
       <p class="workshops-empty" id="workshops-empty">De momento não há workshops abertos a inscrição. Segue-nos no Instagram para seres avisada assim que abrirem novas datas.</p>
     </div>
   </section>
+
+  <!-- ---------- MODAL DE INSCRIÇÃO ---------- -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" id="modal-close" aria-label="Fechar">&times;</button>
+      <h3 id="modal-title">Inscrever</h3>
+      <p class="modal-workshop-name" id="modal-workshop-name"></p>
+
+      <form id="inscricao-form">
+        <input type="hidden" id="workshopId" name="workshopId">
+
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="telemovel">Telemóvel</label>
+        <input type="tel" id="telemovel" name="telemovel" required>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="consentimento" name="consentimento">
+          Aceito receber novidades por email sobre workshops e consultas
+        </label>
+
+        <button type="submit" class="btn" id="submit-btn">Confirmar Inscrição</button>
+        <p class="form-status" id="form-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
 
 </main>
 
@@ -468,6 +591,132 @@
 </footer>
 
 </div>
+
+<script>
+  // TODO: substituir pelo URL da Web App depois de fazeres "Implementar" no Apps Script
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw0JUSgP-R9jilItPaQwbEgT_ABUdSKA5D9KX_wGZmzFTzJiBNIV1MwW8aR4tvo821M/exec";
+
+  const listEl = document.getElementById('workshop-list');
+  const loadingEl = document.getElementById('workshops-loading');
+  const emptyEl = document.getElementById('workshops-empty');
+  const overlay = document.getElementById('modal-overlay');
+  const modalTitle = document.getElementById('modal-workshop-name');
+  const workshopIdInput = document.getElementById('workshopId');
+  const form = document.getElementById('inscricao-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const statusEl = document.getElementById('form-status');
+
+  function renderWorkshops(workshops){
+    loadingEl.remove();
+
+    if (!workshops || workshops.length === 0){
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    workshops.forEach(function(w){
+      const card = document.createElement('div');
+      card.className = 'workshop-card' + (w.tipo === 'Presencial' ? ' workshop-card--destaque' : '');
+
+      const tagClass = w.tipo === 'Presencial' ? 'tag tag--destaque' : 'tag';
+      const podeInscrever = w.abertoInscricoes === 'SIM';
+
+      card.innerHTML =
+        '<div class="info">' +
+          '<span class="' + tagClass + '">' + w.tipo + '</span>' +
+          '<h3>' + w.nome + '</h3>' +
+          '<p class="data">' + w.data + '</p>' +
+        '</div>' +
+        (podeInscrever
+          ? '<button class="btn btn-header" data-id="' + w.id + '" data-nome="' + w.nome + '">Inscrever</button>'
+          : '<span class="btn btn-header btn-disabled">Brevemente</span>');
+
+      listEl.appendChild(card);
+    });
+
+    document.querySelectorAll('#workshop-list button[data-id]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        abrirModal(btn.dataset.id, btn.dataset.nome);
+      });
+    });
+  }
+
+  function carregarWorkshops(){
+    fetch(WEB_APP_URL)
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data.ok) {
+          renderWorkshops(data.workshops);
+        } else {
+          throw new Error(data.erro || 'Erro desconhecido');
+        }
+      })
+      .catch(function(){
+        loadingEl.textContent = 'Não foi possível carregar os workshops. Tenta recarregar a página.';
+      });
+  }
+
+  function abrirModal(id, nome){
+    workshopIdInput.value = id;
+    modalTitle.textContent = nome;
+    statusEl.textContent = '';
+    statusEl.className = 'form-status';
+    form.reset();
+    workshopIdInput.value = id;
+    overlay.classList.add('active');
+  }
+
+  function fecharModal(){
+    overlay.classList.remove('active');
+  }
+
+  document.getElementById('modal-close').addEventListener('click', fecharModal);
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) fecharModal();
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'A enviar…';
+    statusEl.textContent = '';
+    statusEl.className = 'form-status';
+
+    const payload = {
+      workshopId: workshopIdInput.value,
+      nome: document.getElementById('nome').value,
+      email: document.getElementById('email').value,
+      telemovel: document.getElementById('telemovel').value,
+      consentimento: document.getElementById('consentimento').checked ? 'SIM' : 'NÃO'
+    };
+
+    fetch(WEB_APP_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        if (data.ok){
+          statusEl.textContent = 'Inscrição enviada! Verifica o teu email.';
+          statusEl.className = 'form-status success';
+          form.reset();
+          setTimeout(fecharModal, 2200);
+        } else {
+          throw new Error(data.erro || 'Erro ao enviar.');
+        }
+      })
+      .catch(function(err){
+        statusEl.textContent = 'Não foi possível enviar. Tenta novamente. (' + err.message + ')';
+        statusEl.className = 'form-status error';
+      })
+      .finally(function(){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Confirmar Inscrição';
+      });
+  });
+
+  carregarWorkshops();
+</script>
 
 </body>
 </html>
