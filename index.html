@@ -411,7 +411,10 @@
 
   #inscricao-form input[type="text"],
   #inscricao-form input[type="email"],
-  #inscricao-form input[type="tel"]{
+  #inscricao-form input[type="tel"],
+  #inscricao-form input[type="number"],
+  #inscricao-form select,
+  #inscricao-form textarea{
     width: 100%;
     padding: 11px 14px;
     border-radius: 10px;
@@ -420,6 +423,31 @@
     font-size: 0.95rem;
     color: var(--ink);
     background: var(--bg);
+  }
+
+  #inscricao-form textarea{
+    resize: vertical;
+    min-height: 64px;
+  }
+
+  #inscricao-form select{
+    appearance: auto;
+  }
+
+  .campos-presencial{
+    display: none;
+  }
+
+  .campos-presencial.active{
+    display: block;
+  }
+
+  .campos-presencial-nota{
+    font-size: 0.8rem;
+    color: rgba(23,47,45,0.6);
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(23,47,45,0.1);
   }
 
   #inscricao-form input:focus-visible{
@@ -567,6 +595,38 @@
         <label for="telemovel">Telemóvel</label>
         <input type="tel" id="telemovel" name="telemovel" required>
 
+        <label for="comoSoube">Como soubeste deste workshop?</label>
+        <select id="comoSoube" name="comoSoube">
+          <option value="">Prefiro não dizer</option>
+          <option value="Instagram">Instagram</option>
+          <option value="WhatsApp">Grupo de WhatsApp</option>
+          <option value="Recomendação de uma amiga">Recomendação de uma amiga</option>
+          <option value="Pela formadora">Pela formadora</option>
+          <option value="Outro">Outro</option>
+        </select>
+        <input type="text" id="comoSoubeOutro" name="comoSoubeOutro" placeholder="Diz-nos onde" style="display:none; margin-top:8px;">
+
+        <div class="campos-presencial" id="campos-presencial">
+          <p class="campos-presencial-nota">Este workshop é presencial, com vaga limitada. Ajuda-nos a conhecer-te melhor antes do dia.</p>
+
+          <label for="idade">Idade</label>
+          <input type="number" id="idade" name="idade" min="1" max="120">
+
+          <label for="profissao">Profissão</label>
+          <input type="text" id="profissao" name="profissao">
+
+          <label for="instagram">Instagram</label>
+          <input type="text" id="instagram" name="instagram" placeholder="@utilizador">
+
+          <label for="expectativas">O que esperas deste workshop?</label>
+          <textarea id="expectativas" name="expectativas"></textarea>
+
+          <label class="checkbox-label">
+            <input type="checkbox" id="jaParticipou" name="jaParticipou">
+            Já participei num workshop da Saúde Integrativa antes
+          </label>
+        </div>
+
         <label class="checkbox-label">
           <input type="checkbox" id="consentimento" name="consentimento">
           Aceito receber novidades por email sobre workshops e consultas
@@ -628,7 +688,7 @@
           '<p class="data">' + w.data + '</p>' +
         '</div>' +
         (podeInscrever
-          ? '<button class="btn btn-header" data-id="' + w.id + '" data-nome="' + w.nome + '">Inscrever</button>'
+          ? '<button class="btn btn-header" data-id="' + w.id + '" data-nome="' + w.nome + '" data-tipo="' + w.tipo + '">Inscrever</button>'
           : '<span class="btn btn-header btn-disabled">Brevemente</span>');
 
       listEl.appendChild(card);
@@ -636,7 +696,7 @@
 
     document.querySelectorAll('#workshop-list button[data-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
-        abrirModal(btn.dataset.id, btn.dataset.nome);
+        abrirModal(btn.dataset.id, btn.dataset.nome, btn.dataset.tipo);
       });
     });
   }
@@ -656,15 +716,30 @@
       });
   }
 
-  function abrirModal(id, nome){
+  function abrirModal(id, nome, tipo){
     workshopIdInput.value = id;
     modalTitle.textContent = nome;
     statusEl.textContent = '';
     statusEl.className = 'form-status';
     form.reset();
     workshopIdInput.value = id;
+    document.getElementById('comoSoubeOutro').style.display = 'none';
+
+    const camposPresencial = document.getElementById('campos-presencial');
+    if (tipo === 'Presencial'){
+      camposPresencial.classList.add('active');
+    } else {
+      camposPresencial.classList.remove('active');
+    }
+
     overlay.classList.add('active');
   }
+
+  document.getElementById('comoSoube').addEventListener('change', function(){
+    const outroInput = document.getElementById('comoSoubeOutro');
+    outroInput.style.display = (this.value === 'Outro') ? 'block' : 'none';
+    if (this.value !== 'Outro') outroInput.value = '';
+  });
 
   function fecharModal(){
     overlay.classList.remove('active');
@@ -682,11 +757,23 @@
     statusEl.textContent = '';
     statusEl.className = 'form-status';
 
+    const comoSoubeSelect = document.getElementById('comoSoube').value;
+    const comoSoubeOutro = document.getElementById('comoSoubeOutro').value;
+    const comoSoubeFinal = (comoSoubeSelect === 'Outro' && comoSoubeOutro)
+      ? comoSoubeOutro
+      : comoSoubeSelect;
+
     const payload = {
       workshopId: workshopIdInput.value,
       nome: document.getElementById('nome').value,
       email: document.getElementById('email').value,
       telemovel: document.getElementById('telemovel').value,
+      idade: document.getElementById('idade').value,
+      profissao: document.getElementById('profissao').value,
+      instagram: document.getElementById('instagram').value,
+      comoSoube: comoSoubeFinal,
+      expectativas: document.getElementById('expectativas').value,
+      jaParticipou: document.getElementById('jaParticipou').checked ? 'SIM' : 'NÃO',
       consentimento: document.getElementById('consentimento').checked ? 'SIM' : 'NÃO'
     };
 
