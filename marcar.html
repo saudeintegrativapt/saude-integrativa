@@ -254,7 +254,7 @@
       <label for="comprovativo">Submeter comprovativo</label>
       <input type="file" id="comprovativo" accept="image/*">
       <button class="primary" onclick="submeterComprovativo()">Submeter comprovativo</button>
-      <p class="aviso">A confirmação de marcação será enviada por email, assim que validarmos o pagamento do sinal.</p>
+      <p class="aviso">Após validação, recebes confirmação por email. Se o sistema não confirmar automaticamente, a Célia revê o comprovativo em breve.</p>
     </div>
   </div>
 
@@ -270,9 +270,16 @@
     <div class="card hidden" id="cardEstadoMarcacao">
       <h2>Estado da marcação</h2>
       <p id="detalheMarcacao"></p>
+
+      <div class="hidden" id="cardComprovativoGerir">
+        <label for="comprovativoGerir">Submeter comprovativo do sinal</label>
+        <input type="file" id="comprovativoGerir" accept="image/*">
+        <button class="primary" onclick="submeterComprovativoGerir()">Submeter comprovativo</button>
+      </div>
+
       <button class="secondary" onclick="mostrarAdiar()">Adiar</button>
       <button class="secondary" onclick="cancelarMarcacaoAtual()">Cancelar (sinal fica em crédito)</button>
-      <p class="aviso">Preferias outra data mas queres manter esta marcação por agora? <a href="#" onclick="mostrarListaEsperaComMarcacao(event)">Fica em lista de espera para essa data</a>, trocamos automaticamente se a vaga ficar disponível.</p>
+      <p class="aviso">Preferias outra data mas queres manter esta marcação por agora? <a href="#" onclick="mostrarListaEsperaComMarcacao(event)">Fica em lista de espera para essa data</a>, trocamos automaticamente se vagar.</p>
     </div>
 
     <div class="card hidden" id="cardListaEsperaComMarcacao">
@@ -396,6 +403,24 @@
     leitor.readAsDataURL(ficheiro);
   }
 
+  // Para quem fechou a página antes de submeter o comprovativo: volta pela
+  // vista "Gerir marcação" com o código de referência e submete a partir daqui.
+  function submeterComprovativoGerir() {
+    const ficheiro = document.getElementById('comprovativoGerir').files[0];
+    if (!ficheiro) { alert('Escolhe uma imagem.'); return; }
+    const referencia = document.getElementById('refConsulta').value.trim();
+    const leitor = new FileReader();
+    leitor.onload = function() {
+      const base64 = leitor.result.split(',')[1];
+      chamarBackend('submitProof', { referencia: referencia, imagemBase64: base64 })
+        .then(function(r) {
+          alert(r.estado === 'confirmada' ? 'Marcação confirmada!' : 'Comprovativo recebido, a aguardar confirmação.');
+          consultarMarcacao();
+        });
+    };
+    leitor.readAsDataURL(ficheiro);
+  }
+
   function mostrarListaEspera(ev) {
     ev.preventDefault();
     document.getElementById('cardListaEspera').classList.remove('hidden');
@@ -459,6 +484,7 @@
         'Sinal: ' + r.valorSinal + ' €<br>' +
         'Estado: ' + (estadosLegveis[r.estado] || r.estado);
 
+      document.getElementById('cardComprovativoGerir').classList.toggle('hidden', r.estado !== 'pendente_pagamento');
       document.getElementById('cardEstadoMarcacao').classList.remove('hidden');
     });
   }
