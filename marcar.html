@@ -277,9 +277,11 @@
         <button class="primary" onclick="submeterComprovativoGerir()">Submeter comprovativo</button>
       </div>
 
-      <button class="secondary" onclick="mostrarAdiar()">Adiar</button>
-      <button class="secondary" onclick="cancelarMarcacaoAtual()">Cancelar (sinal fica em crédito)</button>
-      <p class="aviso">Preferias outra data mas queres manter esta marcação por agora? <a href="#" onclick="mostrarListaEsperaComMarcacao(event)">Fica em lista de espera para essa data</a>, trocamos automaticamente se vagar.</p>
+      <div id="acoesMarcacaoConfirmada">
+        <button class="secondary" onclick="mostrarAdiar()">Adiar</button>
+        <button class="secondary" onclick="cancelarMarcacaoAtual()">Cancelar (sinal fica em crédito)</button>
+        <p class="aviso">Preferias outra data mas queres manter esta marcação por agora? <a href="#" onclick="mostrarListaEsperaComMarcacao(event)">Fica em lista de espera para essa data</a>, trocamos automaticamente se vagar.</p>
+      </div>
     </div>
 
     <div class="card hidden" id="cardListaEsperaComMarcacao">
@@ -484,7 +486,9 @@
         'Sinal: ' + r.valorSinal + ' €<br>' +
         'Estado: ' + (estadosLegveis[r.estado] || r.estado);
 
+      const podeGerir = (r.estado === 'confirmada' || r.estado === 'por_confirmar');
       document.getElementById('cardComprovativoGerir').classList.toggle('hidden', r.estado !== 'pendente_pagamento');
+      document.getElementById('acoesMarcacaoConfirmada').classList.toggle('hidden', !podeGerir);
       document.getElementById('cardEstadoMarcacao').classList.remove('hidden');
     });
   }
