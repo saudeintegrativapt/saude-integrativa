@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saúde Integrativa · Marcar consulta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F8F9FA;
+    --ink: #172F2D;
+    --forest: #27524E;
+    --sage: #B4DCC4;
+    --white: #FFFFFF;
+    --alert: #B3423A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: 'Jost', sans-serif;
+    color: var(--ink);
+  }
+  header {
+    padding: 32px 24px 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 28px;
+    margin: 0 0 4px;
+    color: var(--forest);
+  }
+  header p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--forest);
+    opacity: 0.7;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(23, 47, 45, 0.06);
+    border: 1px solid rgba(23,47,45,0.06);
+  }
+  .card h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 16px;
+    color: var(--ink);
+  }
+  label {
+    display: block;
+    font-size: 13px;
+    margin: 14px 0 6px;
+    color: var(--ink);
+  }
+  select, input[type=text], input[type=tel], input[type=email], input[type=file] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(23,47,45,0.18);
+    border-radius: 10px;
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  select:focus-visible, input:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 1px;
+  }
+  .slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .slot {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--sage);
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    background: var(--white);
+    color: var(--ink);
+  }
+  .slot.selected {
+    background: var(--forest);
+    color: var(--white);
+    border-color: var(--forest);
+  }
+  button.primary {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+    background: var(--forest);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  button.primary:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+  button.secondary {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border: 1px solid var(--forest);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--forest);
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .referencia {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    text-align: center;
+    color: var(--forest);
+    margin: 8px 0;
+  }
+  .contador {
+    text-align: center;
+    font-size: 14px;
+    color: var(--alert);
+    margin-bottom: 16px;
+  }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    background: var(--white);
+    color: var(--forest);
+    cursor: pointer;
+  }
+  .tab.active {
+    background: var(--forest);
+    color: var(--white);
+  }
+  .aviso {
+    font-size: 13px;
+    color: rgba(23,47,45,0.6);
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .aviso a { color: var(--forest); }
+  .hidden { display: none; }
+  .erro-msg {
+    font-size: 13px;
+    color: var(--alert);
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Saúde Integrativa</h1>
+  <p>MARCAÇÃO DE CONSULTA</p>
+</header>
+
+<main>
+  <div class="tabs">
+    <div class="tab active" id="tabMarcar" onclick="mostrarVista('marcar')">Marcar</div>
+    <div class="tab" id="tabGerir" onclick="mostrarVista('gerir')">Gerir marcação</div>
+  </div>
+
+  <!-- VISTA: MARCAR -->
+  <div id="vistaMarcar">
+    <div class="card">
+      <h2>1. Escolher consulta</h2>
+      <label for="tipoConsulta">Tipo de consulta</label>
+      <select id="tipoConsulta" onchange="carregarSlots()">
+        <option value="primeira_consulta">1ª Consulta - Microbioma/Perfil Alimentar</option>
+        <option value="seguimento">Consulta Seguimento - Microbioma/Perfil Alimentar</option>
+        <option value="reflexologia">Reflexologia</option>
+        <option value="termoauricular">Terapia Termoauricular</option>
+        <option value="cromoterapia">Consulta de Cromoterapia</option>
+        <option value="aromaterapia">Consulta de Aromaterapia</option>
+      </select>
+
+      <label>Horários disponíveis</label>
+      <div class="slots" id="listaSlots">
+        <!-- preenchido via getAvailableSlots -->
+      </div>
+      <p class="aviso">Não encontras uma data que sirva? <a href="#" onclick="mostrarListaEspera(event)">Fica em lista de espera</a> e avisamos assim que vagar um horário.</p>
+    </div>
+
+    <div class="card hidden" id="cardListaEspera">
+      <h2>Lista de espera</h2>
+      <label for="esperaNome">Nome</label>
+      <input type="text" id="esperaNome">
+      <label for="esperaTelefone">Telemóvel</label>
+      <input type="tel" id="esperaTelefone">
+      <label for="esperaEmail">Email</label>
+      <input type="email" id="esperaEmail">
+      <label for="esperaInicio">A partir de</label>
+      <input type="text" id="esperaInicio" placeholder="AAAA-MM-DD">
+      <label for="esperaFim">Até</label>
+      <input type="text" id="esperaFim" placeholder="AAAA-MM-DD">
+      <button class="primary" onclick="submeterListaEspera()">Entrar na lista de espera</button>
+    </div>
+
+    <div class="card" id="cardDados">
+      <h2>2. Os teus dados</h2>
+      <label for="nome">Nome</label>
+      <input type="text" id="nome" placeholder="Nome completo">
+      <label for="telefone">Telemóvel</label>
+      <input type="tel" id="telefone" placeholder="9xx xxx xxx">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="email@exemplo.com">
+      <button class="primary" onclick="confirmarMarcacao()">Continuar para pagamento do sinal</button>
+    </div>
+
+    <!-- VISTA: PAGAMENTO -->
+    <div class="card hidden" id="cardPagamento">
+      <h2>3. Pagar sinal</h2>
+      <div class="referencia" id="refCodigo">SI-0000</div>
+      <p style="text-align:center;">Usa este código na descrição do pagamento.</p>
+      <div class="contador" id="contador">Tempo restante: 60:00</div>
+      <label>Valor do sinal</label>
+      <input type="text" id="valorSinal" readonly>
+      <label>MB WAY</label>
+      <input type="text" id="mbwayNumero" readonly>
+      <label>IBAN (alternativa)</label>
+      <input type="text" id="ibanNumero" readonly>
+      <label for="comprovativo">Submeter comprovativo</label>
+      <input type="file" id="comprovativo" accept="image/*">
+      <button class="primary" onclick="submeterComprovativo()">Submeter comprovativo</button>
+      <p class="aviso">Após validação, recebes confirmação por email. Se o sistema não confirmar automaticamente, a Célia revê o comprovativo em breve.</p>
+    </div>
+  </div>
+
+  <!-- VISTA: GERIR MARCAÇÃO -->
+  <div id="vistaGerir" class="hidden">
+    <div class="card">
+      <h2>Consultar marcação</h2>
+      <label for="refConsulta">Código de referência</label>
+      <input type="text" id="refConsulta" placeholder="SI-0000">
+      <button class="primary" onclick="consultarMarcacao()">Consultar</button>
+    </div>
+
+    <div class="card hidden" id="cardEstadoMarcacao">
+      <h2>Estado da marcação</h2>
+      <p id="detalheMarcacao"></p>
+      <button class="secondary" onclick="mostrarAdiar()">Adiar</button>
+      <button class="secondary" onclick="cancelarMarcacaoAtual()">Cancelar (sinal fica em crédito)</button>
+      <p class="aviso">Preferias outra data mas queres manter esta marcação por agora? <a href="#" onclick="mostrarListaEsperaComMarcacao(event)">Fica em lista de espera para essa data</a>, trocamos automaticamente se vagar.</p>
+    </div>
+
+    <div class="card hidden" id="cardListaEsperaComMarcacao">
+      <h2>Lista de espera para outra data</h2>
+      <label for="esperaInicio2">A partir de</label>
+      <input type="text" id="esperaInicio2" placeholder="AAAA-MM-DD">
+      <label for="esperaFim2">Até</label>
+      <input type="text" id="esperaFim2" placeholder="AAAA-MM-DD">
+      <button class="primary" onclick="submeterListaEsperaComMarcacao()">Confirmar</button>
+    </div>
+
+    <div class="card hidden" id="cardAdiar">
+      <h2>Escolher novo horário</h2>
+      <div class="slots" id="listaSlotsAdiar"></div>
+      <button class="primary" onclick="confirmarAdiamento()">Confirmar novo horário</button>
+      <p class="aviso">Cancelamento não devolve o valor pago. O sinal fica disponível como crédito para nova marcação dentro do prazo de validade.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+  // TODO: substituir pelo URL da Web App do sistema de agendamento
+  // (Apps Script → Implementar → Gerir implementações → copiar URL)
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyRK9aDejmimWAKw3FmRcejvlhGegho-_UrAdeo8a3CyuFXN1nHck20He9Xx3mVgh_d/exec";
+
+  let slotSelecionado = null;
+  let referenciaAtual = null;
+
+  // ---------- Camada de comunicação com o Apps Script ----------
+  // Substitui google.script.run: envia { action, payload } por POST
+  // e espera JSON de volta. O backend precisa de um doPost "router"
+  // que reencaminha para as funções já existentes (ver router.gs).
+  function chamarBackend(action, payload) {
+    return fetch(WEB_APP_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: action, payload: payload || {} })
+    })
+      .then(function(r) { return r.json(); })
+      .catch(function(err) {
+        alert('Não foi possível ligar ao sistema. Tenta novamente. (' + err.message + ')');
+        throw err;
+      });
+  }
+
+  function mostrarVista(vista) {
+    document.getElementById('vistaMarcar').classList.toggle('hidden', vista !== 'marcar');
+    document.getElementById('vistaGerir').classList.toggle('hidden', vista !== 'gerir');
+    document.getElementById('tabMarcar').classList.toggle('active', vista === 'marcar');
+    document.getElementById('tabGerir').classList.toggle('active', vista === 'gerir');
+  }
+
+  function carregarSlots() {
+    chamarBackend('getAvailableSlots', {}).then(renderSlots);
+  }
+
+  function renderSlots(resultado) {
+    const container = document.getElementById('listaSlots');
+    container.innerHTML = '';
+    (resultado.slots || []).forEach(function(s) {
+      const div = document.createElement('div');
+      div.className = 'slot';
+      div.textContent = s.dia + ' · ' + s.horaInicio;
+      div.onclick = function() {
+        document.querySelectorAll('.slot').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        slotSelecionado = s;
+      };
+      container.appendChild(div);
+    });
+  }
+
+  function confirmarMarcacao() {
+    if (!slotSelecionado) { alert('Escolhe um horário.'); return; }
+    const dados = {
+      nome: document.getElementById('nome').value,
+      telefone: document.getElementById('telefone').value,
+      email: document.getElementById('email').value,
+      tipoConsulta: document.getElementById('tipoConsulta').value,
+      dia: slotSelecionado.dia,
+      horaInicio: slotSelecionado.horaInicio
+    };
+    chamarBackend('createBooking', dados).then(mostrarPagamento);
+  }
+
+  function mostrarPagamento(resultado) {
+    referenciaAtual = resultado.referencia;
+    document.getElementById('refCodigo').textContent = resultado.referencia;
+    document.getElementById('valorSinal').value = resultado.valorSinal + ' €';
+    document.getElementById('mbwayNumero').value = resultado.mbway;
+    document.getElementById('ibanNumero').value = resultado.iban;
+    document.getElementById('cardPagamento').classList.remove('hidden');
+    iniciarContador(new Date(resultado.expiraEm));
+  }
+
+  function iniciarContador(expiraEm) {
+    const el = document.getElementById('contador');
+    const intervalo = setInterval(function() {
+      const restante = expiraEm - new Date();
+      if (restante <= 0) {
+        el.textContent = 'Tempo esgotado. O horário foi libertado.';
+        clearInterval(intervalo);
+        return;
+      }
+      const min = Math.floor(restante / 60000);
+      const seg = Math.floor((restante % 60000) / 1000);
+      el.textContent = 'Tempo restante: ' + min + ':' + String(seg).padStart(2, '0');
+    }, 1000);
+  }
+
+  function submeterComprovativo() {
+    const ficheiro = document.getElementById('comprovativo').files[0];
+    if (!ficheiro) { alert('Escolhe uma imagem.'); return; }
+    const leitor = new FileReader();
+    leitor.onload = function() {
+      const base64 = leitor.result.split(',')[1];
+      chamarBackend('submitProof', { referencia: referenciaAtual, imagemBase64: base64 })
+        .then(function(r) {
+          alert(r.estado === 'confirmada' ? 'Marcação confirmada!' : 'Comprovativo recebido, a aguardar confirmação.');
+        });
+    };
+    leitor.readAsDataURL(ficheiro);
+  }
+
+  function mostrarListaEspera(ev) {
+    ev.preventDefault();
+    document.getElementById('cardListaEspera').classList.remove('hidden');
+  }
+
+  function submeterListaEspera() {
+    const dados = {
+      nome: document.getElementById('esperaNome').value,
+      telefone: document.getElementById('esperaTelefone').value,
+      email: document.getElementById('esperaEmail').value,
+      tipoConsulta: document.getElementById('tipoConsulta').value,
+      dataInicio: document.getElementById('esperaInicio').value,
+      dataFim: document.getElementById('esperaFim').value
+    };
+    chamarBackend('entrarListaEspera', dados).then(function() {
+      alert('Ficaste em lista de espera. Avisamos por email assim que vagar um horário.');
+    });
+  }
+
+  function mostrarListaEsperaComMarcacao(ev) {
+    ev.preventDefault();
+    document.getElementById('cardListaEsperaComMarcacao').classList.remove('hidden');
+  }
+
+  function submeterListaEsperaComMarcacao() {
+    const referencia = document.getElementById('refConsulta').value;
+    const dados = {
+      referenciaMarcacao: referencia,
+      nome: '', telefone: '', email: '', tipoConsulta: '',
+      dataInicio: document.getElementById('esperaInicio2').value,
+      dataFim: document.getElementById('esperaFim2').value
+    };
+    // Nome, telefone, email e tipo de consulta são preenchidos no backend
+    // a partir da marcação existente (ver TODO em entrarListaEspera_ /
+    // getBookingByReference_, a adicionar).
+    chamarBackend('entrarListaEspera', dados).then(function() {
+      alert('Registado. Se vagar um horário nesse intervalo, trocamos a tua marcação automaticamente e avisamos por email.');
+    });
+  }
+
+  function consultarMarcacao() {
+    const referencia = document.getElementById('refConsulta').value.trim();
+    if (!referencia) { alert('Indica o código de referência.'); return; }
+
+    chamarBackend('getBookingByReference', { referencia: referencia }).then(function(r) {
+      if (r.error) { alert(r.error); return; }
+
+      const estadosLegveis = {
+        pendente_pagamento: 'Pendente de pagamento',
+        confirmada: 'Confirmada',
+        por_confirmar: 'Comprovativo em revisão',
+        adiada: 'Adiada',
+        expirada: 'Expirada',
+        cancelada_credito: 'Cancelada, sinal em crédito',
+        rejeitada: 'Comprovativo rejeitado'
+      };
+
+      document.getElementById('detalheMarcacao').innerHTML =
+        '<strong>' + r.tipoConsulta + '</strong><br>' +
+        r.dia + ' às ' + r.horaInicio + '<br>' +
+        'Sinal: ' + r.valorSinal + ' €<br>' +
+        'Estado: ' + (estadosLegveis[r.estado] || r.estado);
+
+      document.getElementById('cardEstadoMarcacao').classList.remove('hidden');
+    });
+  }
+
+  function mostrarAdiar() {
+    document.getElementById('cardAdiar').classList.remove('hidden');
+    chamarBackend('getAvailableSlots', {}).then(function(r) {
+      const container = document.getElementById('listaSlotsAdiar');
+      container.innerHTML = '';
+      (r.slots || []).forEach(function(s) {
+        const div = document.createElement('div');
+        div.className = 'slot';
+        div.textContent = s.dia + ' · ' + s.horaInicio;
+        div.onclick = function() {
+          document.querySelectorAll('#listaSlotsAdiar .slot').forEach(el => el.classList.remove('selected'));
+          div.classList.add('selected');
+          slotSelecionado = s;
+        };
+        container.appendChild(div);
+      });
+    });
+  }
+
+  function confirmarAdiamento() {
+    if (!slotSelecionado) { alert('Escolhe um novo horário.'); return; }
+    chamarBackend('postponeBooking', {
+      referencia: document.getElementById('refConsulta').value,
+      novoDia: slotSelecionado.dia,
+      novaHora: slotSelecionado.horaInicio
+    }).then(function(r) {
+      alert(r.error || 'Marcação adiada com sucesso.');
+    });
+  }
+
+  function cancelarMarcacaoAtual() {
+    if (!confirm('O sinal não é reembolsado, fica em crédito para nova marcação. Confirmas?')) return;
+    chamarBackend('cancelBooking', { referencia: document.getElementById('refConsulta').value })
+      .then(function(r) {
+        alert('Cancelada. Crédito válido até ' + r.validoAte);
+      });
+  }
+
+  carregarSlots();
+</script>
+
+</body>
+</html>
